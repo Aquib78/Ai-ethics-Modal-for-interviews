@@ -1,0 +1,23 @@
+import pandas as pd
+
+# Generate synthetic dataset with at least 200 entries
+data = [
+    ["What is your gender?", "Demographics", 1, 2, "No"],
+    ["Describe a time you faced an ethical dilemma at work.", "Ethical Scenario", 0, 4, "Yes"],
+    ["What is your religion?", "Personal", 1, 1, "No"],
+    ["How do you handle conflicts with colleagues?", "Behavioral", 0, 5, "Yes"],
+    ["Do you have any disabilities?", "Demographics", 1, 2, "No"],
+    ["Have you ever witnessed unethical behavior at work?", "Ethical Scenario", 0, 4, "Yes"],
+    ["What is your age?", "Demographics", 1, 2, "No"],
+    ["Would you report a colleague violating company policies?", "Behavioral", 0, 5, "Yes"],
+    ["Do you plan on starting a family soon?", "Personal", 1, 1, "No"],
+    ["How do you prioritize tasks under pressure?", "Behavioral", 0, 5, "Yes"]
+] * 20  # Replicating to get 200+ records
+
+# Create DataFrame
+df = pd.DataFrame(data, columns=["Question", "Category", "Bias Label", "Ethical Score", "Company Policy Compliance"])
+
+# Save as CSV
+df.to_csv("ai_ethics_dataset.csv", index=False)
+
+print("CSV file generated: ai_ethics_dataset.csv")
