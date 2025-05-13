@@ -1,0 +1,17 @@
+import speech_recognition as sr
+
+def get_audio_input():
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("🎤 Listening... Please speak:")
+        audio = recognizer.listen(source)
+
+        try:
+            text = recognizer.recognize_google(audio)
+            return text
+        except sr.UnknownValueError:
+            print("❌ Sorry, I couldn't understand.")
+            return None
+        except sr.RequestError:
+            print("❌ Could not request results from Google Speech Recognition service.")
+            return None
