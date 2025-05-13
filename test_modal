@@ -1,0 +1,43 @@
+import joblib
+import nltk
+import numpy as np
+from nltk.corpus import stopwords
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+nltk.download("stopwords")
+
+# Load trained models and vectorizer
+bias_model = joblib.load("models/bias_model.pkl")
+compliance_model = joblib.load("models/compliance_model.pkl")
+vectorizer = joblib.load("models/tfidf_vectorizer.pkl")
+
+stop_words = set(stopwords.words("english"))
+
+def preprocess_text(text):
+    return " ".join([word for word in text.lower().split() if word not in stop_words])
+
+def predict_question(question):
+    processed = preprocess_text(question)
+    features = vectorizer.transform([processed])
+
+    bias_pred = bias_model.predict(features)[0]
+    bias_proba = np.max(bias_model.predict_proba(features))
+
+    compliance_pred = compliance_model.predict(features)[0]
+    compliance_proba = np.max(compliance_model.predict_proba(features))
+
+    bias_label = "Yes" if bias_pred == 1 else "No"
+    compliance_label = "Yes" if compliance_pred == 1 else "No"
+
+    print(f"\n🔹 Predicted Bias Label: {bias_label} (Confidence: {bias_proba:.2f})")
+    print(f"🔹 Company Policy Compliance: {compliance_label} (Confidence: {compliance_proba:.2f})")
+
+print("\n🔎 AI Ethics Model (Bias & Compliance Checker)")
+print("------------------------------------------------")
+
+while True:
+    user_input = input("\nEnter a question (or type 'exit' to quit): ")
+    if user_input.strip().lower() == "exit":
+        break
+    predict_question(user_input)
